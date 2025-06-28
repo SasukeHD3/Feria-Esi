@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Juego ESI Interactivo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    .question {
+      background-color: white;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .options button {
+      display: block;
+      margin: 8px 0;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+    }
+    .correct {
+      background-color: #c8f7c5 !important;
+    }
+    .incorrect {
+      background-color: #f7c5c5 !important;
+    }
+    .feedback {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧠 Juego ESI Interactivo</h1>
+  <p>Seleccioná la respuesta correcta. Las respuestas correctas se marcarán en <span style="color:green; font-weight:bold;">verde</span> y las incorrectas en <span style="color:red; font-weight:bold;">rojo</span>.</p>
+
+  <div id="quiz"></div>
+
+  <script>
+    const questions = [
+      {
+        q: "¿Qué es la ESI?",
+        options: [
+          "Una materia sobre reproducción",
+          "Un enfoque para hablar solo de sexualidad",
+          "Una propuesta educativa que promueve derechos",
+          "Clases para hablar de enfermedades"
+        ],
+        answer: 2,
+        feedback: [
+          "Incorrecto: La ESI no se limita a la reproducción.",
+          "Incorrecto: La ESI aborda mucho más que sexualidad.",
+          "Correcto: La ESI promueve derechos, igualdad y prevención.",
+          "Incorrecto: No se limita a temas de salud."
+        ]
+      },
+      {
+        q: "¿Qué busca la ESI en relación al respeto?",
+        options: [
+          "Que todos piensen igual",
+          "Fomentar el respeto por la diversidad",
+          "Prohibir hablar de género",
+          "Eliminar las diferencias"
+        ],
+        answer: 1,
+        feedback: [
+          "Incorrecto: No impone una forma de pensar.",
+          "Correcto: La diversidad es un valor fundamental.",
+          "Incorrecto: La ESI alienta hablar de género.",
+          "Incorrecto: Busca valorar las diferencias."
+        ]
+      },
+      {
+        q: "¿Cuál es uno de los derechos fundamentales que promueve la ESI?",
+        options: [
+          "El silencio sobre el cuerpo",
+          "El derecho a recibir información",
+          "Ocultar el embarazo adolescente",
+          "Negar el género"
+        ],
+        answer: 1,
+        feedback: [
+          "Incorrecto: La ESI no fomenta el silencio, sino la expresión informada.",
+          "Correcto: El acceso a la información es un derecho fundamental.",
+          "Incorrecto: La ESI busca visibilizar y acompañar.",
+          "Incorrecto: Reconoce y respeta la identidad de género."
+        ]
+      },
+      {
+        q: "¿Desde qué edad debe enseñarse ESI?",
+        options: [
+          "Solo en secundaria",
+          "Desde el nivel inicial",
+          "Cuando se inicia la pubertad",
+          "Nunca en primaria"
+        ],
+        answer: 1,
+        feedback: [
+          "Incorrecto: La secundaria es demasiado tarde para comenzar.",
+          "Correcto: La ESI es progresiva y comienza desde la infancia.",
+          "Incorrecto: La pubertad no es el único momento clave.",
+          "Incorrecto: La primaria también debe incluir ESI."
+        ]
+      },
+      {
+        q: "¿Qué es un estereotipo de género?",
+        options: [
+          "Una ley sobre los géneros",
+          "Una realidad biológica",
+          "Una idea fija sobre cómo deben ser mujeres u hombres",
+          "Algo científico"
+        ],
+        answer: 2,
+        feedback: [
+          "Incorrecto: Los estereotipos no son leyes.",
+          "Incorrecto: No son biológicos, son construcciones sociales.",
+          "Correcto: Son ideas impuestas que limitan a las personas.",
+          "Incorrecto: No están basados en ciencia."
+        ]
+      },
+      {
+        q: "¿Qué rol promueve la ESI para la paternidad?",
+        options: [
+          "Secundario",
+          "Activo y comprometido",
+          "Solo proveedor económico",
+          "Inexistente"
+        ],
+        answer: 1,
+        feedback: [
+          "Incorrecto: La ESI no promueve la pasividad en los padres.",
+          "Correcto: Busca una paternidad presente y afectiva.",
+          "Incorrecto: El rol va más allá de lo económico.",
+          "Incorrecto: El padre tiene un rol importante."
+        ]
+      },
+      {
+        q: "¿La maternidad es...?",
+        options: [
+          "Una obligación para todas las mujeres",
+          "Una elección personal",
+          "Una función biológica obligatoria",
+          "Lo que se espera siempre de una mujer"
+        ],
+        answer: 1,
+        feedback: [
+          "Incorrecto: No todas las mujeres desean ser madres.",
+          "Correcto: La maternidad es una decisión libre.",
+          "Incorrecto: La biología no impone obligaciones.",
+          "Incorrecto: La ESI combate mandatos sociales."
+        ]
+      },
+      {
+        q: "¿Qué actitud fomenta la ESI ante la diversidad sexual?",
+        options: [
+          "Ignorarla",
+          "Ocultarla",
+          "Reconocerla y respetarla",
+          "Reprimirla"
+        ],
+        answer: 2,
+        feedback: [
+          "Incorrecto: Invisibilizar es excluir.",
+          "Incorrecto: Ocultar contribuye a la discriminación.",
+          "Correcto: La ESI promueve el respeto por todas las identidades.",
+          "Incorrecto: La represión vulnera derechos."
+        ]
+      },
+      {
+        q: "¿Qué herramienta clave usa la ESI?",
+        options: [
+          "El diálogo",
+          "El castigo",
+          "El silencio",
+          "El control"
+        ],
+        answer: 0,
+        feedback: [
+          "Correcto: El diálogo permite aprender con libertad y respeto.",
+          "Incorrecto: No se trata de castigar sino de construir.",
+          "Incorrecto: El silencio perpetúa mitos.",
+          "Incorrecto: La ESI busca empoderar, no controlar."
+        ]
+      },
+      {
+        q: "¿Qué significa consentimiento?",
+        options: [
+          "Dejarse llevar",
+          "Ceder siempre",
+          "Aceptar de manera libre y clara",
+          "No decir nada"
+        ],
+        answer: 2,
+        feedback: [
+          "Incorrecto: No implica actuar sin pensar.",
+          "Incorrecto: No es obligación ceder.",
+          "Correcto: El consentimiento debe ser informado y libre.",
+          "Incorrecto: El silencio no es consentimiento."
+        ]
+      },
+      {
+        q: "¿La ESI incluye contenidos sobre…?",
+        options: [
+          "Solo relaciones sexuales",
+          "Religión y política",
+          "Género, derechos, emociones y cuidado del cuerpo",
+          "Economía"
+        ],
+        answer: 2,
+        feedback: [
+          "Incorrecto: Va más allá de lo sexual.",
+          "Incorrecto: No es su enfoque central.",
+          "Correcto: La ESI es integral y abarca diversos temas.",
+          "Incorrecto: No es su objetivo."
+        ]
+      },
+      {
+        q: "¿Qué busca prevenir la ESI?",
+        options: [
+          "La libertad",
+          "La expresión corporal",
+          "El abuso y la violencia",
+          "Las relaciones de amistad"
+        ],
+        answer: 2,
+        feedback: [
+          "Incorrecto: La libertad es un valor que promueve.",
+          "Incorrecto: La expresión es positiva.",
+          "Correcto: Educa para detectar y prevenir abusos.",
+          "Incorrecto: Las amistades son parte del desarrollo."
+        ]
+      },
+      {
+        q: "¿La menstruación debe enseñarse…?",
+        options: [
+          "Solo a las mujeres",
+          "A todos, sin importar el género",
+          "Cuando ocurre",
+          "En secreto"
+        ],
+        answer: 1,
+        feedback: [
+          "Incorrecto: Todos deben comprender los procesos naturales.",
+          "Correcto: Es parte de una educación integral.",
+          "Incorrecto: Se puede aprender antes.",
+          "Incorrecto: No hay temas tabú."
+        ]
+      },
+      {
+        q: "¿Qué promueve la ESI sobre las emociones?",
+        options: [
+          "Ignorarlas",
+          "Reconocerlas y expresarlas",
+          "Reprimirlas",
+          "Que solo las mujeres las tengan"
+        ],
+        answer: 1,
+        feedback: [
+          "Incorrecto: No se deben ocultar.",
+          "Correcto: Las emociones forman parte del desarrollo integral.",
+          "Incorrecto: La represión emocional es dañina.",
+          "Incorrecto: Todos tenemos emociones."
+        ]
+      },
+      {
+        q: "¿Quiénes tienen derecho a recibir ESI?",
+        options: [
+          "Solo los adolescentes",
+          "Todas las personas, desde la infancia",
+          "Solo quienes lo pidan",
+          "Solo mujeres"
+        ],
+        answer: 1,
+        feedback: [
+          "Incorrecto: También es para niñeces.",
+          "Correcto: La ESI es un derecho universal.",
+          "Incorrecto: No es opcional.",
+          "Incorrecto: Es para todas las personas."
+        ]
+      }
+    ];
+
+    const quiz = document.getElementById('quiz');
+
+    questions.forEach((item, index) => {
+      const qDiv = document.createElement('div');
+      qDiv.className = 'question';
+
+      const title = document.createElement('h3');
+      title.textContent = (index + 1) + '. ' + item.q;
+      qDiv.appendChild(title);
+
+      const optionsDiv = document.createElement('div');
+      optionsDiv.className = 'options';
+
+      item.options.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.textContent = opt;
+        btn.onclick = () => {
+          const allBtns = optionsDiv.querySelectorAll('button');
+          allBtns.forEach(b => b.disabled = true);
+
+          if (i === item.answer) {
+            btn.classList.add('correct');
+          } else {
+            btn.classList.add('incorrect');
+            allBtns[item.answer].classList.add('correct');
+          }
+
+          const fb = document.createElement('div');
+          fb.className = 'feedback';
+          fb.textContent = item.feedback[i];
+          qDiv.appendChild(fb);
+        };
+        optionsDiv.appendChild(btn);
+      });
+
+      qDiv.appendChild(optionsDiv);
+      quiz.appendChild(qDiv);
+    });
+  </script>
+</body>
+</html>
